@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UWA Study Dashboard 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --card: #16161f;
+  --card2: #1c1c28;
+  --border: #252535;
+  --border2: #2e2e42;
+  --text: #eeeef5;
+  --muted: #6b6b8a;
+  --muted2: #9494b0;
+  --fina: #60a5fa;
+  --fina-dim: rgba(96,165,250,0.12);
+  --fina-border: rgba(96,165,250,0.25);
+  --econ2271: #34d399;
+  --econ2271-dim: rgba(52,211,153,0.12);
+  --econ2271-border: rgba(52,211,153,0.25);
+  --econ1111: #fbbf24;
+  --econ1111-dim: rgba(251,191,36,0.12);
+  --econ1111-border: rgba(251,191,36,0.25);
+  --econ2233: #f472b6;
+  --econ2233-dim: rgba(244,114,182,0.12);
+  --econ2233-border: rgba(244,114,182,0.25);
+  --accent: #818cf8;
+  --accent-dim: rgba(129,140,248,0.15);
+  --green: #34d399;
+  --red: #f87171;
+  --warn: #fbbf24;
+  --sidebar-w: 220px;
+}
+
+body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; display: flex; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  padding: 1.5rem 1.2rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo .logo-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sidebar-logo .logo-sub {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+.sidebar-nav {
+  padding: 1rem 0.6rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.nav-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  padding: 0.6rem 0.6rem 0.3rem;
+  margin-top: 0.4rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--muted2);
+  transition: all 0.15s;
+  border: 1px solid transparent;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover { background: var(--card); color: var(--text); }
+.nav-item.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(129,140,248,0.2); font-weight: 500; }
+
+.nav-icon { font-size: 0.9rem; width: 16px; text-align: center; }
+
+.sidebar-units {
+  padding: 0.8rem 0.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.unit-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.unit-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.unit-pill.fina { color: var(--fina); background: var(--fina-dim); }
+.unit-pill.econ2271 { color: var(--econ2271); background: var(--econ2271-dim); }
+.unit-pill.econ1111 { color: var(--econ1111); background: var(--econ1111-dim); }
+.unit-pill.econ2233 { color: var(--econ2233); background: var(--econ2233-dim); }
+
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbar-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.topbar-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  display: flex;
+  gap: 1.5rem;
+}
+
+.topbar-badge {
+  background: var(--accent-dim);
+  border: 1px solid rgba(129,140,248,0.3);
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.content { padding: 1.8rem 2rem; flex: 1; }
+
+/* PANELS */
+.panel { display: none; animation: fadeIn 0.2s ease; }
+.panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── WIDGETS ── */
+.widget-grid { display: grid; gap: 1rem; margin-bottom: 1.5rem; }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-2-1 { grid-template-columns: 2fr 1fr; }
+.grid-1-2 { grid-template-columns: 1fr 2fr; }
+
+.widget {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.widget-sm { padding: 1rem; }
+
+.widget-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.widget-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.widget-value.good { color: var(--green); }
+.widget-value.warn { color: var(--warn); }
+.widget-value.accent { color: var(--accent); }
+
+.widget-sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
+
+.widget-accent-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 12px 12px 0 0;
+}
+
+.section-header {
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── GPA TRACKER ── */
+.gpa-arc-wrap {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.5rem 0;
+}
+
+.gpa-arc {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.gpa-arc svg { transform: rotate(-90deg); }
+
+.gpa-arc-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.gpa-arc-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.gpa-arc-label {
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.2rem;
+}
+
+.gpa-stats { flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
+
+.gpa-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+}
+
+.gpa-stat-label { color: var(--muted2); }
+.gpa-stat-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--text); }
+.gpa-stat-val.good { color: var(--green); }
+.gpa-stat-val.warn { color: var(--warn); }
+
+/* ── ASSESSMENT CARDS ── */
+.assessment-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.assessment-item {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 0.8rem;
+  transition: border-color 0.15s;
+}
+
+.assessment-item:hover { border-color: var(--border2); }
+
+.assessment-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.assessment-info { min-width: 0; }
+.assessment-name { font-weight: 500; font-size: 0.82rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.assessment-meta { font-size: 0.7rem; color: var(--muted); margin-top: 0.1rem; font-family: 'JetBrains Mono', monospace; }
+
+.assessment-weight {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted2);
+  white-space: nowrap;
+}
+
+.assessment-score-wrap { display: flex; align-items: center; gap: 0.4rem; }
+
+.score-input {
+  width: 56px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.5rem;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.score-input:focus { border-color: var(--accent); }
+.score-input::placeholder { color: var(--muted); }
+.score-pct { font-size: 0.7rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+.status-badge {
+  font-size: 0.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.status-badge.upcoming { background: var(--accent-dim); color: var(--accent); }
+.status-badge.due-soon { background: rgba(251,191,36,0.15); color: var(--warn); }
+.status-badge.overdue { background: rgba(248,113,113,0.15); color: var(--red); }
+.status-badge.done { background: rgba(52,211,153,0.12); color: var(--green); }
+
+/* ── NEEDED SCORE WIDGET ── */
+.needed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+
+.needed-card {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8rem;
+}
+
+.needed-unit { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 500; margin-bottom: 0.4rem; }
+.needed-assessment { font-size: 0.75rem; color: var(--muted2); margin-bottom: 0.3rem; }
+.needed-score { font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 700; }
+.needed-score.achievable { color: var(--green); }
+.needed-score.stretch { color: var(--warn); }
+.needed-score.tough { color: var(--red); }
+
+/* ── WEEK SCHEDULE ── */
+.week-selector { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.2rem; }
+
+.week-btn {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--muted2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.week-btn:hover { border-color: var(--border2); color: var(--text); }
+.week-btn.active { background: var(--accent-dim); border-color: rgba(129,140,248,0.3); color: var(--accent); }
+
+.week-num-display {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text);
+  font-weight: 600;
+  padding: 0 0.5rem;
+}
+
+.readings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-bottom: 1rem; }
+
+.reading-card {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  border-top: 2px solid;
+}
+
+.reading-card.fina { border-top-color: var(--fina); }
+.reading-card.econ2271 { border-top-color: var(--econ2271); }
+.reading-card.econ1111 { border-top-color: var(--econ1111); }
+.reading-card.econ2233 { border-top-color: var(--econ2233); }
+
+.reading-unit { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 600; margin-bottom: 0.4rem; }
+.reading-card.fina .reading-unit { color: var(--fina); }
+.reading-card.econ2271 .reading-unit { color: var(--econ2271); }
+.reading-card.econ1111 .reading-unit { color: var(--econ1111); }
+.reading-card.econ2233 .reading-unit { color: var(--econ2233); }
+
+.reading-topic { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; line-height: 1.3; }
+.reading-chapter { font-size: 0.72rem; color: var(--muted2); font-family: 'JetBrains Mono', monospace; }
+.reading-assessment { margin-top: 0.6rem; font-size: 0.68rem; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; }
+
+.week-assessment-row {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.wa-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.wa-unit { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; width: 80px; }
+.wa-name { font-size: 0.8rem; color: var(--text); flex: 1; }
+.wa-type { font-size: 0.65rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+/* ── CHECKLIST ── */
+.checklist-block { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.8rem; overflow: hidden; }
+.checklist-header { padding: 0.8rem 1.2rem; background: var(--card2); display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.checklist-title { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+.checklist-prog { display: flex; align-items: center; gap: 0.8rem; }
+.prog-text { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+.prog-bar { width: 100px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
+.checklist-items { padding: 0.8rem 1.2rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.35rem; }
+.check-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.35rem 0.5rem; border-radius: 6px; cursor: pointer; transition: background 0.1s; }
+.check-row:hover { background: var(--card2); }
+.check-box { width: 15px; height: 15px; border: 1.5px solid var(--border2); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.check-box svg { opacity: 0; transition: opacity 0.15s; }
+.check-row.checked .check-box { background: var(--green); border-color: var(--green); }
+.check-row.checked .check-box svg { opacity: 1; }
+.check-row.checked .check-label { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--border2); }
+.check-label { font-size: 0.78rem; color: var(--text); line-height: 1.4; }
+.check-udot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── RHYTHM ── */
+.day-grid { display: grid; grid-template-columns: 90px 1fr; }
+.day-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; color: var(--muted); padding: 0.7rem 0.8rem 0.7rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; }
+.day-items { padding: 0.6rem 0; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+.day-tag { font-size: 0.7rem; padding: 0.25rem 0.65rem; border-radius: 5px; font-weight: 500; }
+.day-tag.lecture { background: var(--econ2271-dim); color: var(--econ2271); border: 1px solid var(--econ2271-border); }
+.day-tag.read { background: var(--fina-dim); color: var(--fina); border: 1px solid var(--fina-border); }
+.day-tag.review { background: var(--econ1111-dim); color: var(--econ1111); border: 1px solid var(--econ1111-border); }
+.day-tag.practice { background: var(--econ2233-dim); color: var(--econ2233); border: 1px solid var(--econ2233-border); }
+.day-tag.buffer { background: var(--accent-dim); color: var(--accent); border: 1px dashed rgba(129,140,248,0.3); }
+.day-tag.light { background: rgba(107,107,138,0.12); color: var(--muted2); border: 1px solid var(--border); }
+.day-time { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 0.2rem 0.45rem; border-radius: 4px; }
+
+/* ── NOTE TAKING ── */
+.phase-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.2rem; }
+.phase-card { background: var(--card); padding: 1.3rem; }
+.phase-n { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; opacity: 0.1; line-height: 1; margin-bottom: 0.5rem; }
+.phase-card:nth-child(1) .phase-n { color: var(--fina); }
+.phase-card:nth-child(2) .phase-n { color: var(--econ2271); }
+.phase-card:nth-child(3) .phase-n { color: var(--accent); }
+.phase-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+.phase-card:nth-child(1) .phase-tag { color: var(--fina); }
+.phase-card:nth-child(2) .phase-tag { color: var(--econ2271); }
+.phase-card:nth-child(3) .phase-tag { color: var(--accent); }
+.phase-title { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
+.phase-time { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--muted); margin-bottom: 0.8rem; }
+.phase-rules { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.phase-rules li { font-size: 0.76rem; color: var(--muted2); padding-left: 1rem; position: relative; line-height: 1.5; }
+.phase-rules li::before { content: '›'; position: absolute; left: 0; color: var(--accent); }
+.phase-rules li strong { color: var(--text); font-weight: 500; }
+
+.page-layout { display: grid; grid-template-columns: 1fr 340px; gap: 1rem; margin-bottom: 1.2rem; }
+.mock-page { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.mock-page-top { background: var(--card2); border-bottom: 1px solid var(--border); padding: 0.7rem 1rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; }
+.mock-field span { font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; display: block; }
+.mock-field div { height: 1px; background: var(--border2); margin-top: 0.3rem; }
+.mock-cols { display: grid; grid-template-columns: 1fr 0.45fr; min-height: 280px; }
+.mock-main-col { border-right: 2px dashed var(--accent); padding: 0.7rem; display: flex; flex-direction: column; gap: 0.45rem; }
+.mock-right-col { padding: 0.7rem 0.6rem; display: flex; flex-direction: column; gap: 0.45rem; }
+.ml { height: 1px; background: var(--border2); }
+.ml.s { width: 55%; }
+.ml.m { width: 78%; }
+.ml.f { width: 100%; }
+.ml-label { font-family: 'JetBrains Mono', monospace; font-size: 0.48rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem; }
+.ml-label.r { color: var(--econ2271); }
+.ml-label.w { color: var(--warn); }
+.ml-indent { padding-left: 0.7rem; border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.3rem; }
+.ml-formula { background: var(--accent-dim); border: 1px solid rgba(129,140,248,0.2); padding: 0.3rem 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; color: var(--accent); }
+.ml-gap { height: 0.6rem; }
+.mock-sowhat { background: rgba(129,140,248,0.05); border-top: 2px solid var(--accent); padding: 0.6rem 0.8rem; }
+.mock-sowhat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+
+.annotation-cards { display: flex; flex-direction: column; gap: 0.6rem; }
+.ann-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; }
+.ann-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+.ann-card:nth-child(1) .ann-label { color: var(--fina); }
+.ann-card:nth-child(2) .ann-label { color: var(--econ2271); }
+.ann-card:nth-child(3) .ann-label { color: var(--accent); }
+.ann-card p { font-size: 0.76rem; color: var(--muted2); line-height: 1.6; }
+.ann-card p strong { color: var(--text); font-weight: 500; }
+
+.sowhat-box { background: rgba(52,211,153,0.04); border: 1px solid rgba(52,211,153,0.2); border-left: 3px solid var(--green); border-radius: 10px; padding: 1.2rem; margin-bottom: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.sw-left h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green); margin-bottom: 0.5rem; }
+.sw-left p { font-size: 0.76rem; color: var(--muted2); line-height: 1.7; }
+.sw-left p strong { color: var(--text); font-weight: 500; }
+.sw-examples { display: flex; flex-direction: column; gap: 0.5rem; }
+.sw-eg { padding: 0.6rem 0.8rem; border-radius: 6px; }
+.sw-eg.bad { background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); }
+.sw-eg.good { background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.2); }
+.sw-eg-label { font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+.sw-eg.bad .sw-eg-label { color: var(--red); }
+.sw-eg.good .sw-eg-label { color: var(--green); }
+.sw-eg-text { font-size: 0.73rem; font-style: italic; line-height: 1.5; }
+.sw-eg.bad .sw-eg-text { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(248,113,113,0.4); }
+.sw-eg.good .sw-eg-text { color: var(--text); }
+
+.pivot-wrap { overflow-x: auto; margin-bottom: 1.2rem; }
+.pivot-tbl { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+.pivot-tbl th { background: var(--card2); font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); }
+.pivot-tbl td { padding: 0.75rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--muted2); vertical-align: top; line-height: 1.5; background: var(--card); }
+.pivot-tbl td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; width: 90px; }
+.pivot-tbl td.fc { color: var(--fina); }
+.pivot-tbl td.ec { color: var(--econ2271); }
+.pivot-tbl td.e1c { color: var(--econ1111); }
+.pivot-tbl td.e2c { color: var(--econ2233); }
+.pivot-tbl td strong { color: var(--text); font-weight: 500; }
+
+.dodo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.2rem; }
+.do-col, .dont-col { background: var(--card); padding: 1.2rem; }
+.dodo-hdr { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+.do-col .dodo-hdr { color: var(--green); }
+.dont-col .dodo-hdr { color: var(--red); }
+.dodo-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.dodo-list li { font-size: 0.76rem; color: var(--muted2); padding-left: 1.1rem; position: relative; line-height: 1.5; }
+.do-col .dodo-list li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-size: 0.68rem; }
+.dont-col .dodo-list li::before { content: '✕'; position: absolute; left: 0; color: var(--red); font-size: 0.68rem; }
+.dodo-list li strong { color: var(--text); font-weight: 500; }
+
+.pc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; margin-bottom: 1.2rem; }
+.pc-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; border-top: 2px solid; }
+.pc-card.fina { border-top-color: var(--fina); }
+.pc-card.econ2271 { border-top-color: var(--econ2271); }
+.pc-card.econ1111 { border-top-color: var(--econ1111); }
+.pc-card.econ2233 { border-top-color: var(--econ2233); }
+.pc-unit { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; margin-bottom: 0.3rem; }
+.pc-card.fina .pc-unit { color: var(--fina); }
+.pc-card.econ2271 .pc-unit { color: var(--econ2271); }
+.pc-card.econ1111 .pc-unit { color: var(--econ1111); }
+.pc-card.econ2233 .pc-unit { color: var(--econ2233); }
+.pc-count { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 700; color: var(--text); line-height: 1; }
+.pc-sub { font-size: 0.68rem; color: var(--muted); margin-top: 0.2rem; }
+.pc-note { font-size: 0.7rem; color: var(--muted2); margin-top: 0.5rem; line-height: 1.4; }
+
+/* ── REVISION ── */
+.rev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1.2rem; }
+.rev-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem; }
+.rev-title { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+.rev-desc { font-size: 0.76rem; color: var(--muted2); line-height: 1.6; }
+
+/* ── INFO BOX ── */
+.info-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.76rem;
+  color: var(--muted2);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.info-box-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+.info-box strong { color: var(--text); font-weight: 500; }
+
+.warn-box {
+  background: rgba(251,191,36,0.05);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-left: 3px solid var(--warn);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.76rem;
+  color: var(--muted2);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.warn-box-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--warn); margin-bottom: 0.4rem; }
+.warn-box strong { color: var(--text); font-weight: 500; }
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .readings-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  :root { --sidebar-w: 60px; }
+  .sidebar-logo .logo-text, .sidebar-logo .logo-sub, .nav-item span, .nav-section-label, .sidebar-units { display: none; }
+  .nav-item { justify-content: center; padding: 0.7rem; }
+  .nav-icon { width: auto; }
+  .phase-cards, .dodo-grid { grid-template-columns: 1fr; }
+  .page-layout { grid-template-columns: 1fr; }
+  .sowhat-box { grid-template-columns: 1fr; }
+  .pc-grid { grid-template-columns: repeat(2, 1fr); }
+  .rev-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .grid-3, .grid-2, .grid-2-1, .grid-1-2 { grid-template-columns: 1fr; }
+  .readings-grid, .needed-grid { grid-template-columns: 1fr; }
+  .content { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">UWA // 2026</div>
+    <div class="logo-sub">Sem 1 · Financial Economics</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <button class="nav-item active" onclick="nav('dashboard')"><span class="nav-icon">⊞</span><span>Dashboard</span></button>
+    <button class="nav-item" onclick="nav('grades')"><span class="nav-icon">◎</span><span>Grade Tracker</span></button>
+
+    <div class="nav-section-label">Planning</div>
+    <button class="nav-item" onclick="nav('schedule')"><span class="nav-icon">◷</span><span>Weekly Schedule</span></button>
+    <button class="nav-item" onclick="nav('checklist')"><span class="nav-icon">✓</span><span>Checklist</span></button>
+    <button class="nav-item" onclick="nav('rhythm')"><span class="nav-icon">⟳</span><span>Weekly Rhythm</span></button>
+
+    <div class="nav-section-label">Study System</div>
+    <button class="nav-item" onclick="nav('notetaking')"><span class="nav-icon">✎</span><span>Note-Taking</span></button>
+    <button class="nav-item" onclick="nav('revision')"><span class="nav-icon">⟡</span><span>Revision</span></button>
+  </nav>
+  <div class="sidebar-units">
+    <div class="unit-pill fina"><div class="unit-dot" style="background:var(--fina)"></div>FINA2222</div>
+    <div class="unit-pill econ2271"><div class="unit-dot" style="background:var(--econ2271)"></div>ECON2271</div>
+    <div class="unit-pill econ1111"><div class="unit-dot" style="background:var(--econ1111)"></div>ECON1111</div>
+    <div class="unit-pill econ2233"><div class="unit-dot" style="background:var(--econ2233)"></div>ECON2233 <span style="font-size:0.55rem;opacity:0.5">TBA</span></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-meta">
+      <span>Sem 1 · 2026</span>
+      <span>Wk 1 of 12</span>
+    </div>
+    <div class="topbar-badge">Target: GPA 6.0+</div>
+  </div>
+
+  <div class="content">
+
+  <!-- ════════════ DASHBOARD ════════════ -->
+  <div class="panel active" id="panel-dashboard">
+
+    <div class="widget-grid grid-4">
+      <div class="widget widget-sm">
+        <div class="widget-accent-bar" style="background:var(--accent)"></div>
+        <div class="widget-label">Current GPA</div>
+        <div class="widget-value accent" id="dash-gpa">—</div>
+        <div class="widget-sub">Target: 6.0+</div>
+      </div>
+      <div class="widget widget-sm">
+        <div class="widget-accent-bar" style="background:var(--green)"></div>
+        <div class="widget-label">Assessments Done</div>
+        <div class="widget-value good" id="dash-done">0</div>
+        <div class="widget-sub" id="dash-done-sub">of 14 this semester</div>
+      </div>
+      <div class="widget widget-sm">
+        <div class="widget-accent-bar" style="background:var(--warn)"></div>
+        <div class="widget-label">Next Due</div>
+        <div class="widget-value" style="font-size:1rem;padding-top:0.3rem" id="dash-next-due">FINA2222 Quiz #1</div>
+        <div class="widget-sub">Week 1 · Online</div>
+      </div>
+      <div class="widget widget-sm">
+        <div class="widget-accent-bar" style="background:var(--fina)"></div>
+        <div class="widget-label">Current Week</div>
+        <div class="widget-value accent">1</div>
+        <div class="widget-sub">23 Feb 2026</div>
+      </div>
+    </div>
+
+    <div class="widget-grid grid-2">
+      <div class="widget">
+        <div class="section-header">Unit Overview</div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;font-size:0.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;padding-bottom:0.4rem;border-bottom:1px solid var(--border)">
+            <span>Unit</span><span>Difficulty</span><span>Key Risk</span><span>Progress</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;align-items:center">
+            <span style="color:var(--fina);font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:600">FINA2222</span>
+            <span style="font-size:0.72rem;color:var(--warn)">●●●●○</span>
+            <span style="font-size:0.7rem;color:var(--muted2)">Topics chain</span>
+            <div style="height:4px;background:var(--border);border-radius:2px"><div style="width:8%;height:100%;background:var(--fina);border-radius:2px"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;align-items:center">
+            <span style="color:var(--econ2271);font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:600">ECON2271</span>
+            <span style="font-size:0.72rem;color:var(--red)">●●●●●</span>
+            <span style="font-size:0.7rem;color:var(--muted2)">Daily practice</span>
+            <div style="height:4px;background:var(--border);border-radius:2px"><div style="width:8%;height:100%;background:var(--econ2271);border-radius:2px"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;align-items:center">
+            <span style="color:var(--econ1111);font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:600">ECON1111</span>
+            <span style="font-size:0.72rem;color:var(--warn)">●●●○○</span>
+            <span style="font-size:0.7rem;color:var(--muted2)">Don't coast</span>
+            <div style="height:4px;background:var(--border);border-radius:2px"><div style="width:8%;height:100%;background:var(--econ1111);border-radius:2px"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;align-items:center">
+            <span style="color:var(--econ2233);font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:600">ECON2233</span>
+            <span style="font-size:0.72rem;color:var(--warn)">●●●●○</span>
+            <span style="font-size:0.7rem;color:var(--muted2)">Draw diagrams</span>
+            <div style="height:4px;background:var(--border);border-radius:2px"><div style="width:0%;height:100%;background:var(--econ2233);border-radius:2px"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="widget">
+        <div class="section-header">Upcoming Assessments</div>
+        <div style="display:flex;flex-direction:column;gap:0.45rem" id="upcoming-list"></div>
+      </div>
+    </div>
+
+    <div class="widget-grid grid-2">
+      <div class="widget">
+        <div class="section-header">Week 1 Readings</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem">
+          <div style="display:flex;align-items:center;gap:0.8rem;padding:0.6rem;background:var(--card2);border-radius:6px;border:1px solid var(--border)">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--fina);flex-shrink:0"></div>
+            <div><div style="font-size:0.78rem;font-weight:500;color:var(--text)">The Cost of Capital</div><div style="font-size:0.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace">FINA2222 · Berk & DeMarzo Ch.12</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.8rem;padding:0.6rem;background:var(--card2);border-radius:6px;border:1px solid var(--border)">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--econ2271);flex-shrink:0"></div>
+            <div><div style="font-size:0.78rem;font-weight:500;color:var(--text)">Causation & Randomized Experiments</div><div style="font-size:0.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace">ECON2271 · Mastering 'Metrics Ch.1</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.8rem;padding:0.6rem;background:var(--card2);border-radius:6px;border:1px solid var(--border)">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--econ1111);flex-shrink:0"></div>
+            <div><div style="font-size:0.78rem;font-weight:500;color:var(--text)">Fundamentals</div><div style="font-size:0.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace">ECON1111 · Textbook + videos</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.8rem;padding:0.6rem;background:var(--card2);border-radius:6px;border:1px solid var(--border);opacity:0.5">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--econ2233);flex-shrink:0"></div>
+            <div><div style="font-size:0.78rem;font-weight:500;color:var(--muted)">ECON2233 — outline pending</div><div style="font-size:0.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace">No pre-read available yet</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="widget">
+        <div class="section-header">Study Tips — This Week</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem">
+          <div style="padding:0.6rem 0.8rem;background:var(--card2);border-radius:6px;border-left:2px solid var(--fina)"><div style="font-size:0.7rem;font-weight:600;color:var(--fina);margin-bottom:0.2rem">FINA2222</div><div style="font-size:0.74rem;color:var(--muted2)">Ch.12 sets up the entire unit — fuzzy WACC now = trouble later. Focus on the "why" behind each formula.</div></div>
+          <div style="padding:0.6rem 0.8rem;background:var(--card2);border-radius:6px;border-left:2px solid var(--econ2271)"><div style="font-size:0.7rem;font-weight:600;color:var(--econ2271);margin-bottom:0.2rem">ECON2271</div><div style="font-size:0.74rem;color:var(--muted2)">Brand new subject — pre-read for vocab and curiosity gaps only. Don't try to understand formulas before the lecture.</div></div>
+          <div style="padding:0.6rem 0.8rem;background:var(--card2);border-radius:6px;border-left:2px solid var(--econ1111)"><div style="font-size:0.7rem;font-weight:600;color:var(--econ1111);margin-bottom:0.2rem">ECON1111</div><div style="font-size:0.74rem;color:var(--muted2)">Fundamentals week — don't underestimate it. These basics appear in every later topic and in ECON2271.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════ GRADES ════════════ -->
+  <div class="panel" id="panel-grades">
+
+    <div class="widget-grid grid-3" style="margin-bottom:1.5rem">
+      <div class="widget">
+        <div class="gpa-arc-wrap">
+          <div class="gpa-arc">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="8"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="8" stroke-dasharray="314" id="gpa-arc-circle" stroke-dashoffset="314" stroke-linecap="round"/>
+            </svg>
+            <div class="gpa-arc-center">
+              <div class="gpa-arc-num" id="gpa-display">—</div>
+              <div class="gpa-arc-label">/ 7.0</div>
+            </div>
+          </div>
+          <div class="gpa-stats">
+            <div class="gpa-stat-row"><span class="gpa-stat-label">Current GPA</span><span class="gpa-stat-val" id="gpa-current">No grades yet</span></div>
+            <div class="gpa-stat-row"><span class="gpa-stat-label">Target</span><span class="gpa-stat-val good">6.0+</span></div>
+            <div class="gpa-stat-row"><span class="gpa-stat-label">Gap</span><span class="gpa-stat-val" id="gpa-gap">—</span></div>
+            <div class="gpa-stat-row"><span class="gpa-stat-label">% Graded</span><span class="gpa-stat-val" id="gpa-pct-graded">0%</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="widget" style="grid-column: span 2">
+        <div class="section-header">What Do I Need? <span style="font-size:0.65rem;color:var(--muted);font-weight:400">Required scores in remaining assessments to hit GPA 6.0 (75%)</span></div>
+        <div class="needed-grid" id="needed-grid"></div>
+      </div>
+    </div>
+
+    <!-- FINA2222 -->
+    <div class="section-header"><span style="color:var(--fina)">■</span> FINA2222 — Corporate Financial Policy</div>
+    <div class="assessment-list" id="assess-fina" style="margin-bottom:1.5rem"></div>
+
+    <!-- ECON2271 -->
+    <div class="section-header"><span style="color:var(--econ2271)">■</span> ECON2271 — Introductory Econometrics</div>
+    <div class="assessment-list" id="assess-econ2271" style="margin-bottom:1.5rem"></div>
+
+    <!-- ECON1111 -->
+    <div class="section-header"><span style="color:var(--econ1111)">■</span> ECON1111 — Quantitative Methods</div>
+    <div class="assessment-list" id="assess-econ1111" style="margin-bottom:1.5rem"></div>
+
+    <!-- ECON2233 -->
+    <div class="section-header"><span style="color:var(--econ2233)">■</span> ECON2233 — Microeconomics <span style="font-size:0.65rem;color:var(--muted);font-weight:400">· outline pending</span></div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem;text-align:center;color:var(--muted);font-size:0.78rem;margin-bottom:1.5rem">
+      Upload ECON2233 unit outline to populate assessments
+    </div>
+
+    <div class="info-box">
+      <div class="info-box-label">UWA Grade Scale</div>
+      <strong>HD</strong> 80–100% &nbsp;·&nbsp; <strong>D</strong> 70–79% &nbsp;·&nbsp; <strong>CR</strong> 60–69% &nbsp;·&nbsp; <strong>P</strong> 50–59% &nbsp;·&nbsp; <strong>N+</strong> 45–49% &nbsp;·&nbsp; <strong>N</strong> 0–44% &nbsp;&nbsp;|&nbsp;&nbsp; GPA 6.0 = 75%+ average across all units
+    </div>
+
+  </div>
+
+  <!-- ════════════ SCHEDULE ════════════ -->
+  <div class="panel" id="panel-schedule">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <div class="week-selector" id="week-selector"></div>
+    </div>
+
+    <div class="widget-grid grid-2-1">
+      <div class="widget">
+        <div class="section-header">Readings & Topics</div>
+        <div class="readings-grid" id="readings-display" style="grid-template-columns:repeat(2,1fr)"></div>
+      </div>
+      <div class="widget">
+        <div class="section-header">Assessments This Week</div>
+        <div id="week-assessments"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════ CHECKLIST ════════════ -->
+  <div class="panel" id="panel-checklist">
+    <div class="section-header">Weekly Completion Checklist <span style="color:var(--muted);font-size:0.65rem;font-weight:400">— tick off as you go, goal is 100% by Sunday night</span></div>
+    <div id="checklist-container"></div>
+  </div>
+
+  <!-- ════════════ RHYTHM ════════════ -->
+  <div class="panel" id="panel-rhythm">
+    <div class="widget-grid grid-2">
+      <div class="widget">
+        <div class="section-header">Your Week — Based on Actual Timetable</div>
+        <div class="day-grid">
+          <div class="day-label">MON</div>
+          <div class="day-items">
+            <span class="day-tag read">📖 Pre-read ECON2233 (Tue lecture)</span>
+            <span class="day-tag read">📖 Pre-read FINA2222 (Wed recording)</span>
+            <span class="day-time">~45 min</span>
+          </div>
+          <div class="day-label">TUE</div>
+          <div class="day-items">
+            <span class="day-tag lecture">🎓 FINA2222 Tutorial — 2pm (from Wk 2)</span>
+            <span class="day-tag lecture">🎓 ECON2233 Lecture — 4pm</span>
+            <span class="day-tag review">✏️ Post-process ECON2233 notes (evening)</span>
+            <span class="day-time">~2–3 hrs</span>
+          </div>
+          <div class="day-label">WED</div>
+          <div class="day-items">
+            <span class="day-tag lecture">🎓 ECON2233 Tutorial — 8am (from Wk 2)</span>
+            <span class="day-tag lecture">🎓 ECON2271 Lecture — 10am ✓ in person</span>
+            <span class="day-tag light">🖥️ FINA2222 — watch recording (clashes)</span>
+            <span class="day-tag lecture">🎓 ECON1111 Tutorial — 2pm (from Wk 2)</span>
+            <span class="day-tag review">✏️ Post-process ECON2271 (before 2pm tutorial)</span>
+            <span class="day-tag review">✏️ Watch + post-process FINA2222 (evening — non-negotiable)</span>
+            <span class="day-time">~4–5 hrs · heaviest day</span>
+          </div>
+          <div class="day-label">THU</div>
+          <div class="day-items">
+            <span class="day-tag read">📖 Pre-read ECON1111 + ECON2271</span>
+            <span class="day-tag lecture">🎓 ECON1111 Lecture — 9am</span>
+            <span class="day-tag lecture">🎓 ECON2271 Lab — 1pm</span>
+            <span class="day-tag review">✏️ Post-process ECON1111 (evening)</span>
+            <span class="day-time">~3–4 hrs</span>
+          </div>
+          <div class="day-label">FRI</div>
+          <div class="day-items">
+            <span class="day-tag practice">🔢 Tutorial questions — all units (from Wk 2)</span>
+            <span class="day-tag review">✏️ Weekly concept map — all units</span>
+            <span class="day-tag light">🔁 Review flagged gaps</span>
+            <span class="day-time">~2 hrs</span>
+          </div>
+          <div class="day-label">SAT</div>
+          <div class="day-items">
+            <span class="day-tag practice">🔢 ECON2271 extra problems</span>
+            <span class="day-tag buffer">⚡ Buffer: get ahead on readings</span>
+            <span class="day-time">~1.5 hrs</span>
+          </div>
+          <div class="day-label">SUN</div>
+          <div class="day-items">
+            <span class="day-tag light">🔁 Spaced review — older weeks</span>
+            <span class="day-tag buffer">⚡ Pre-read Mon/Tue if not done</span>
+            <span class="day-time">~1 hr</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="widget">
+        <div class="section-header" style="margin-bottom:1rem">Weekly Time Budget</div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem">
+          <div style="display:flex;align-items:center;gap:0.8rem">
+            <span style="color:var(--fina);font-family:'JetBrains Mono',monospace;font-size:0.68rem;width:80px">FINA2222</span>
+            <div style="flex:1;height:6px;background:var(--border);border-radius:3px"><div style="width:58%;height:100%;background:var(--fina);border-radius:3px"></div></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted2)">5–7 hrs</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.8rem">
+            <span style="color:var(--econ2271);font-family:'JetBrains Mono',monospace;font-size:0.68rem;width:80px">ECON2271</span>
+            <div style="flex:1;height:6px;background:var(--border);border-radius:3px"><div style="width:75%;height:100%;background:var(--econ2271);border-radius:3px"></div></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted2)">6–8 hrs</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.8rem">
+            <span style="color:var(--econ1111);font-family:'JetBrains Mono',monospace;font-size:0.68rem;width:80px">ECON1111</span>
+            <div style="flex:1;height:6px;background:var(--border);border-radius:3px"><div style="width:40%;height:100%;background:var(--econ1111);border-radius:3px"></div></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted2)">3–5 hrs</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.8rem">
+            <span style="color:var(--econ2233);font-family:'JetBrains Mono',monospace;font-size:0.68rem;width:80px">ECON2233</span>
+            <div style="flex:1;height:6px;background:var(--border);border-radius:3px"><div style="width:50%;height:100%;background:var(--econ2233);border-radius:3px"></div></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted2)">4–6 hrs</span>
+          </div>
+        </div>
+        <div class="warn-box">
+          <div class="warn-box-label">⚠ Wednesday Warning</div>
+          Wednesday is your heaviest day — 8am tutorial, 10am lecture, 2pm tutorial, plus post-processing two units in the evening. <strong>Solid Monday pre-reads are essential.</strong> FINA2222 recording must be watched Wednesday evening — don't let it drift.
+        </div>
+        <div class="info-box" style="margin-bottom:0">
+          <div class="info-box-label">Post-Lecture Timing</div>
+          Aim to post-process notes <strong>within 2 hours</strong> of each lecture ending. The forgetting curve drops steeply in the first two hours — this window is when post-processing has the highest leverage.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ NOTE-TAKING ════════════ -->
+  <div class="panel" id="panel-notetaking">
+
+    <div class="section-header">The Three-Pass System</div>
+    <div class="phase-cards">
+      <div class="phase-card">
+        <div class="phase-n">01</div>
+        <div class="phase-tag">Before lecture</div>
+        <div class="phase-title">Pre-read Skim</div>
+        <div class="phase-time">// 20–35 min · not a full read</div>
+        <ul class="phase-rules">
+          <li>Read <strong>intro + summary</strong> first — two minutes max</li>
+          <li>Scan <strong>major section headings</strong> only</li>
+          <li>Glance at <strong>figures at section starts</strong></li>
+          <li>Note <strong>unfamiliar bolded terms</strong> — don't define them</li>
+          <li>Write <strong>2–3 genuine questions</strong> — curiosity gaps</li>
+          <li>For new content: <strong>vocab + worked examples</strong> only</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-n">02</div>
+        <div class="phase-tag">During lecture</div>
+        <div class="phase-title">Capture</div>
+        <div class="phase-time">// compressed phrases · your own words</div>
+        <ul class="phase-rules">
+          <li><strong>Rephrase everything</strong> — never copy verbatim</li>
+          <li>Answer <strong>"what is this?" + "why does it matter?"</strong></li>
+          <li>Leave <strong>⅓ page as right margin</strong> — draw before class</li>
+          <li>Use <strong>indentation</strong> for hierarchy, not bullets</li>
+          <li><strong>Dash or star</strong> when pace picks up — keep moving</li>
+          <li>Formulas get a <strong>plain English annotation</strong> underneath</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-n">03</div>
+        <div class="phase-tag">Within 24 hours</div>
+        <div class="phase-title">Post-Process</div>
+        <div class="phase-time">// 15–20 min · highest retention leverage</div>
+        <ul class="phase-rules">
+          <li>Fill <strong>right margin</strong> with chapter links + clarifications</li>
+          <li>Write <strong>"So What?" sentence</strong> per page</li>
+          <li>Fill gaps from textbook — <strong>not a re-read</strong></li>
+          <li>Do <strong>1–2 tutorial questions</strong> while fresh</li>
+          <li>Flag remaining gaps — your <strong>revision hit list</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-header">Page Layout</div>
+    <div class="page-layout">
+      <div class="mock-page">
+        <div class="mock-page-top">
+          <div class="mock-field"><span>Unit</span><div></div></div>
+          <div class="mock-field"><span>Week / Topic</span><div></div></div>
+          <div class="mock-field"><span>Pre-read questions</span><div></div></div>
+        </div>
+        <div class="mock-cols">
+          <div class="mock-main-col">
+            <div class="ml-label">⅔ page — main notes (during lecture)</div>
+            <div class="ml f"></div><div class="ml m"></div><div class="ml-gap"></div>
+            <div class="ml f"></div>
+            <div class="ml-indent"><div class="ml m"></div><div class="ml s"></div></div>
+            <div class="ml-formula">r = rf + β(rm − rf)</div>
+            <div class="ml-gap"></div>
+            <div class="ml-label w">★ gap — fill from textbook</div>
+            <div style="height:1rem;border-bottom:1px dashed var(--border2)"></div>
+            <div class="ml-gap"></div>
+            <div class="ml f"></div><div class="ml m"></div>
+            <div class="ml-indent"><div class="ml f"></div><div class="ml s"></div></div>
+          </div>
+          <div class="mock-right-col">
+            <div class="ml-label r">⅓ — right margin (within 24hrs)</div>
+            <div class="ml f"></div><div class="ml m"></div><div class="ml-gap"></div>
+            <div class="ml-label r">📖 ch. link</div><div class="ml f"></div><div class="ml-gap"></div>
+            <div class="ml-label w">⚠ gap</div><div class="ml m"></div><div class="ml-gap"></div>
+            <div class="ml-label r">⭢ connects to</div><div class="ml f"></div><div class="ml s"></div><div class="ml-gap"></div>
+            <div class="ml-label r">📝 tut Q</div><div class="ml m"></div>
+          </div>
+        </div>
+        <div class="mock-sowhat">
+          <div class="mock-sowhat-label">★ so what? — one sentence (after lecture)</div>
+          <div class="ml f"></div><div class="ml m" style="margin-top:0.4rem"></div>
+        </div>
+      </div>
+      <div class="annotation-cards">
+        <div class="ann-card">
+          <div class="ann-label">Main body — ⅔ of page</div>
+          <p>Compressed phrases in <strong>your own words</strong>. Each point answers "what is this?" or "why does it matter?" Indent sub-points. Formulas always get a plain English annotation. Leave white space between ideas.</p>
+        </div>
+        <div class="ann-card">
+          <div class="ann-label">Right margin — ⅓ of page (6–7cm on A4)</div>
+          <p>Left empty during lecture. Filled within 24 hours. Use for <strong>chapter links</strong>, <strong>connections</strong> to other weeks, <strong>gap clarifications</strong>, and tutorial questions. Draw the line before class.</p>
+        </div>
+        <div class="ann-card">
+          <div class="ann-label">"So What?" box — bottom of each page</div>
+          <p><strong>One sentence.</strong> Written after lecture. Not a definition — an insight or consequence. If you can't write it, the concept isn't solid yet. That's useful to know now, not in the exam.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header">The "So What?" Sentence</div>
+    <div class="sowhat-box">
+      <div class="sw-left">
+        <h3>What it is + why it works</h3>
+        <p>One sentence per page, written <strong>after</strong> the lecture. Forces you to decide what mattered most and state it in plain English without jargon. If you can't compress it, that's a signal the concept isn't fully understood yet.<br><br>Cognitively this works because it forces <strong>elaborative encoding</strong> — connecting information to meaning and consequence rather than just restating it. Over a semester your "So What?" sentences become a powerful rapid-fire revision document.</p>
+      </div>
+      <div class="sw-examples">
+        <div class="sw-eg bad"><div class="sw-eg-label">✕ Bad — definition, not insight</div><div class="sw-eg-text">"WACC is the weighted average of the costs of each component of a firm's capital structure adjusted for tax."</div></div>
+        <div class="sw-eg good"><div class="sw-eg-label">✓ Good — consequence + implication</div><div class="sw-eg-text">"Using one WACC for every project means you'll fund risky projects that shouldn't proceed and reject safe ones that should."</div></div>
+        <div class="sw-eg good"><div class="sw-eg-label">✓ Good — ECON2271</div><div class="sw-eg-text">"OLS finds the line that minimises total squared errors — the squaring means big mistakes are penalised much more than small ones."</div></div>
+        <div class="sw-eg good"><div class="sw-eg-label">✓ Good — ECON2233</div><div class="sw-eg-text">"Price floors always create surplus because they prevent the market reaching the price where supply equals demand."</div></div>
+      </div>
+    </div>
+
+    <div class="section-header">How Notes Pivot by Unit</div>
+    <div class="pivot-wrap">
+      <table class="pivot-tbl">
+        <thead><tr><th>Unit</th><th>Main body priority</th><th>Right margin use</th><th>"So What?" tone</th><th>Pages/lecture</th></tr></thead>
+        <tbody>
+          <tr><td class="fc">FINA2222</td><td>Compressed argument + formulas with plain English annotations. Frame every concept around what decision it informs.</td><td>Chapter links, week-to-week connections, tutorial questions to attempt.</td><td>Consequence or decision implication. "This matters because a firm that does X will end up with Y."</td><td><strong>3–4 pages</strong></td></tr>
+          <tr><td class="ec">ECON2271</td><td>Full worked examples with every step — don't compress maths. Annotate what each step is doing and why.</td><td>Tick steps followed confidently, question-mark steps you didn't. This becomes your practice list.</td><td>Technique utility. "This method lets you do X without having to Y." Focus on what the tool achieves.</td><td><strong>5–6 pages</strong></td></tr>
+          <tr><td class="e1c">ECON1111</td><td>Formula + conditions for use written together. Capture problem setups even if you miss mid-steps.</td><td>Note when NOT to use each formula — this is where exam mistakes happen. Flag pattern recognition cues.</td><td>When-to-use insight. "Use this when X holds, not when Y — because Z."</td><td><strong>3–5 pages</strong></td></tr>
+          <tr><td class="e2c">ECON2233</td><td>Diagram first, words second — draw every diagram bigger than you think. Label everything carefully.</td><td>Real-world examples and comparative statics: what happens when one variable shifts?</td><td>Market outcome insight. "When X policy is imposed, the market does Y because incentives change Z way."</td><td><strong>3–5 pages</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-header">Do / Don't</div>
+    <div class="dodo-grid">
+      <div class="do-col">
+        <div class="dodo-hdr">✓ Do</div>
+        <ul class="dodo-list">
+          <li><strong>Rephrase everything</strong> in your own words — even one word changed means your brain engaged</li>
+          <li><strong>Leave white space</strong> between distinct ideas — visual structure, not wasted paper</li>
+          <li><strong>Draw the margin line</strong> before class, all pages at once</li>
+          <li><strong>Draw every diagram</strong> yourself in ECON2233 — passive slide exposure does almost nothing</li>
+          <li><strong>Use a dash and keep going</strong> when pace picks up — a gap beats a pile-up every time</li>
+          <li><strong>Write formulas + plain English</strong> annotation immediately underneath</li>
+          <li><strong>Post-process within 2 hours</strong> ideally, 24 hours maximum</li>
+          <li><strong>Write "So What?" per page</strong> — even rough, the act of writing is the point</li>
+          <li>For ECON2271: <strong>redo problems you got wrong</strong> rather than re-reading theory</li>
+        </ul>
+      </div>
+      <div class="dont-col">
+        <div class="dodo-hdr">✕ Don't</div>
+        <ul class="dodo-list">
+          <li><strong>Don't transcribe</strong> — hand copying with brain off is wasted time</li>
+          <li><strong>Don't skim from page one</strong> progressively — over-cover the start, miss the back half</li>
+          <li><strong>Don't write questions you already know the answer to</strong></li>
+          <li><strong>Don't write "So What?" as a definition</strong> — consequences stick, definitions don't</li>
+          <li><strong>Don't chase a missed point</strong> while the lecturer moves on — mark it and keep going</li>
+          <li><strong>Don't write full sentences</strong> during lecture — compressed phrases are faster and just as useful</li>
+          <li><strong>Don't make the margin too narrow</strong> — 6–7cm on A4, drawn deliberately</li>
+          <li><strong>Don't skip post-processing</strong> because the lecture felt clear — clarity fades faster than you think</li>
+          <li>For new content: <strong>don't try to deeply understand before class</strong> — vocab is enough</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-header">Page Count Guide</div>
+    <div class="pc-grid">
+      <div class="pc-card fina"><div class="pc-unit">FINA2222</div><div class="pc-count">3–4</div><div class="pc-sub">pages per lecture</div><div class="pc-note">Conceptual content compresses well. 6+ pages = you're transcribing, not capturing.</div></div>
+      <div class="pc-card econ2271"><div class="pc-unit">ECON2271</div><div class="pc-count">5–6</div><div class="pc-sub">pages per lecture</div><div class="pc-note">Maths needs space — don't compress worked steps. Higher count here is correct.</div></div>
+      <div class="pc-card econ1111"><div class="pc-unit">ECON1111</div><div class="pc-count">3–5</div><div class="pc-sub">pages per lecture</div><div class="pc-note">Varies by density. Always capture problem setups and conditions for formula use.</div></div>
+      <div class="pc-card econ2233"><div class="pc-unit">ECON2233</div><div class="pc-count">3–5</div><div class="pc-sub">pages per lecture</div><div class="pc-note">Diagrams take space — let them. A cramped diagram is harder to learn from.</div></div>
+    </div>
+
+  </div>
+
+  <!-- ════════════ REVISION ════════════ -->
+  <div class="panel" id="panel-revision">
+    <div class="section-header">Semester-Long Revision Strategy</div>
+    <div class="rev-grid">
+      <div class="rev-card"><div class="rev-title">🔁 Weekly Mini-Review <span style="font-size:0.7rem;color:var(--muted);font-weight:400">Fridays · 30 min</span></div><div class="rev-desc">Flip through the week's notes and concept maps. Don't re-read — try to recall key ideas with the page face-down. Anything you can't recall gets flagged. This is active retrieval — the most evidence-backed study method available.</div></div>
+      <div class="rev-card"><div class="rev-title">📅 Spaced Repetition <span style="font-size:0.7rem;color:var(--muted);font-weight:400">Every 2 weeks</span></div><div class="rev-desc">Every fortnight spend 20 min per unit going back two weeks. Re-do one tutorial problem from each topic. The goal isn't to re-read — it's to attempt recall and rebuild what's fading before it disappears completely.</div></div>
+      <div class="rev-card"><div class="rev-title">🏗️ FINA2222 Concept Chain Map</div><div class="rev-desc">Keep a running one-page diagram showing how each week's topic connects to prior ones. By Week 8 this becomes a powerful exam summary. Cost of capital → capital structure → payout policy → M&A → governance.</div></div>
+      <div class="rev-card"><div class="rev-title">🔢 ECON2271 Problem Bank</div><div class="rev-desc">Keep a folder of every problem you got wrong or found hard. Don't re-read theory for maths — redo the problems. Return to each hard problem twice before the exam. This is your highest-leverage pre-exam activity.</div></div>
+      <div class="rev-card"><div class="rev-title">⏱️ Exam Prep <span style="font-size:0.7rem;color:var(--muted);font-weight:400">3 weeks out</span></div><div class="rev-desc">Shift from learning to practice. Past papers under timed conditions. Mark your own work harshly. Identify whether errors are conceptual (understanding gap) or mechanical (calculation error) — they need different fixes.</div></div>
+      <div class="rev-card"><div class="rev-title">🛡️ Saturday Buffer</div><div class="rev-desc">In quiet weeks, use Saturdays to get one week ahead on readings — this is how you build the slack you need. In heavy weeks (assignments, tests), the buffer absorbs the load without derailing your weekly rhythm.</div></div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-label">GPA 6.0+ at UWA — What It Actually Requires</div>
+      A <strong>6 = 75–84%</strong>, a <strong>7 = 85%+</strong>. Averaging a high Credit to low Distinction across all four units gets you there. Past FINA2222 students who achieve this note the exam rewards <strong>conceptual understanding and application</strong> over formula memorisation — exactly what the three-pass system and "So What?" habit builds. Don't just do enough to pass tutorials — understand why the answer is what it is.
+    </div>
+    <div class="info-box" style="border-left-color:var(--green)">
+      <div class="info-box-label" style="color:var(--green)">End-of-Week Habit That Compounds</div>
+      Every Friday, write a <strong>half-page plain-English concept map</strong> per unit. No jargon. If you can explain WACC to someone who's never studied finance, you know it. If you can't, that's your revision flag. Over a semester these maps become one of the most efficient revision tools you'll have.
+    </div>
+  </div>
+
+  </div><!-- end content -->
+</div><!-- end main -->
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const ASSESSMENTS = {
+  fina: [
+    { id:'f1', name:'Online Quiz #1', weight:2.5, due:'2026-02-25', week:1, type:'Quiz' },
+    { id:'f2', name:'Online Quiz #2', weight:2.5, due:'2026-03-04', week:2, type:'Quiz' },
+    { id:'f3', name:'Online Quiz #3 + Tutorial #1', weight:2.5, due:'2026-03-11', week:3, type:'Quiz+Tutorial' },
+    { id:'f4', name:'Online Quiz #4 + Tutorial #2', weight:2.5, due:'2026-03-18', week:4, type:'Quiz+Tutorial' },
+    { id:'f5', name:'Online Quiz #5 + Tutorial #3', weight:2.5, due:'2026-03-25', week:5, type:'Quiz+Tutorial' },
+    { id:'f6', name:'Online Quiz #6 + Tutorial #4', weight:2.5, due:'2026-04-01', week:6, type:'Quiz+Tutorial' },
+    { id:'f7', name:'Online Quiz #7 + Tutorial #5', weight:2.5, due:'2026-04-22', week:8, type:'Quiz+Tutorial' },
+    { id:'f8', name:'Online Quiz #8 + Tutorial #6', weight:2.5, due:'2026-04-29', week:9, type:'Quiz+Tutorial' },
+    { id:'f9', name:'Online Quiz #9 + Tutorial #7', weight:2.5, due:'2026-05-06', week:10, type:'Quiz+Tutorial' },
+    { id:'f10', name:'Case Study (Group)', weight:20, due:'2026-04-19', week:7, type:'Assignment' },
+    { id:'f11', name:'Final Examination', weight:55, due:'2026-05-20', week:12, type:'Exam' },
+  ],
+  econ2271: [
+    { id:'e71a', name:'Tutorial Attendance & Participation', weight:10, due:'2026-03-13', week:3, type:'Attendance' },
+    { id:'e71b', name:'Assignment #1', weight:20, due:'2026-04-18', week:7, type:'Assignment' },
+    { id:'e71c', name:'Assignment #2', weight:25, due:'2026-06-07', week:12, type:'Assignment' },
+    { id:'e71d', name:'In-Tutorial Test 1', weight:15, due:'2026-03-23', week:5, type:'Test' },
+    { id:'e71e', name:'In-Tutorial Test 2', weight:15, due:'2026-04-20', week:8, type:'Test' },
+    { id:'e71f', name:'In-Tutorial Test 3', weight:15, due:'2026-05-18', week:12, type:'Test' },
+  ],
+  econ1111: [
+    { id:'e11a', name:'Tutorial Activities (ongoing)', weight:30, due:'2026-05-14', week:11, type:'Tutorial' },
+    { id:'e11b', name:'Test 1', weight:10, due:'2026-03-26', week:5, type:'Test' },
+    { id:'e11c', name:'Test 2', weight:10, due:'2026-04-30', week:9, type:'Test' },
+    { id:'e11d', name:'Test 3', weight:10, due:'2026-05-21', week:12, type:'Test' },
+    { id:'e11e', name:'Final Examination', weight:40, due:'2026-06-13', week:14, type:'Exam' },
+  ]
+};
+
+const WEEK_SCHEDULE = [
+  { week:1, date:'23 Feb', fina:{topic:'The Cost of Capital', reading:'Berk & DeMarzo Ch.12', assessment:'Quiz #1'}, econ2271:{topic:'Causation & Randomized Experiments', reading:"Mastering 'Metrics Ch.1", assessment:''}, econ1111:{topic:'Fundamentals', reading:'Textbook + videos', assessment:'No assessment — no tutorials'}, econ2233:{topic:'TBA', reading:'Outline pending', assessment:''} },
+  { week:2, date:'2 Mar', fina:{topic:'Capital Structure — Perfect Markets I', reading:'Ch.14', assessment:'Quiz #2, Tutorial #1 begins'}, econ2271:{topic:'Simple Regression Model', reading:'Wooldridge Ch.2', assessment:''}, econ1111:{topic:'Functions Part 1', reading:'Textbook + videos + problem sets', assessment:'No assessment — no tutorials'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:3, date:'9 Mar', fina:{topic:'Capital Structure — Perfect Markets II', reading:'Ch.14', assessment:'Quiz #3 + Tutorial #2'}, econ2271:{topic:'Simple Regression Model', reading:'Wooldridge Ch.2', assessment:'Tutorial attendance begins'}, econ1111:{topic:'Functions Part 2', reading:'Textbook + videos + problem sets', assessment:'Tutorial questions'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:4, date:'16 Mar', fina:{topic:'Capital Structure — Debt & Taxes', reading:'Ch.15', assessment:'Quiz #4 + Tutorial #3'}, econ2271:{topic:'Multiple Regression', reading:'Wooldridge Ch.3', assessment:'Tutorial attendance'}, econ1111:{topic:'Financial Mathematics Part 1', reading:'Textbook + videos + problem sets', assessment:'Tutorial questions'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:5, date:'23 Mar', fina:{topic:'Capital Structure — Financial Distress', reading:'Ch.16', assessment:'Quiz #5 + Tutorial #4'}, econ2271:{topic:'Inference', reading:'Wooldridge Ch.4', assessment:'⚠ Test 1 in Tutorial'}, econ1111:{topic:'Test Week', reading:'Textbook + videos + problem sets', assessment:'⚠ Test 1 — no tutorials'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:6, date:'30 Mar', fina:{topic:'Payout Policy', reading:'Ch.17', assessment:'Quiz #6 + Tutorial #5'}, econ2271:{topic:'Inference', reading:'Wooldridge Ch.4', assessment:'Tutorial attendance'}, econ1111:{topic:'Financial Mathematics Part 2', reading:'Textbook + videos + problem sets', assessment:'Tutorial questions'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:7, date:'13 Apr', fina:{topic:'No lecture or tutorials — Complete assignment', reading:'—', assessment:'⚠ Case Study due 19 Apr'}, econ2271:{topic:'Further Issues', reading:'Wooldridge Ch.6', assessment:'Tutorial attendance · ⚠ Assignment #1 due 18 Apr'}, econ1111:{topic:'Calculus Part 1', reading:'Textbook + videos + problem sets', assessment:'Tutorial questions'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:8, date:'20 Apr', fina:{topic:'Capital Budgeting & Valuation with Leverage I', reading:'Ch.18', assessment:'Quiz #7 + Tutorial #6'}, econ2271:{topic:'Dummy Variables', reading:'Wooldridge Ch.7', assessment:'⚠ Test 2 in Tutorial'}, econ1111:{topic:'Calculus Part 2', reading:'Textbook + videos + problem sets', assessment:'Tutorial questions'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:9, date:'27 Apr', fina:{topic:'Capital Budgeting & Valuation with Leverage II', reading:'Ch.18', assessment:'Quiz #8 + Tutorial #7'}, econ2271:{topic:'Heteroskedasticity', reading:'Wooldridge Ch.8', assessment:'Tutorial attendance'}, econ1111:{topic:'Test Week', reading:'Textbook + videos + problem sets', assessment:'⚠ Test 2 — no tutorials'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:10, date:'4 May', fina:{topic:'Mergers & Acquisitions', reading:'Ch.28', assessment:'Quiz #9 + Tutorial #8'}, econ2271:{topic:'Panel Data & Difference-in-Difference', reading:'Wooldridge Ch.1+13', assessment:'Tutorial attendance'}, econ1111:{topic:'Introduction to Statistics Part 1', reading:'Textbook + videos + problem sets', assessment:'Tutorial questions'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:11, date:'11 May', fina:{topic:'Raising Equity Capital', reading:'Ch.23', assessment:'Quiz #10 + Tutorial #9'}, econ2271:{topic:'Instrumental Variables', reading:'Wooldridge Ch.15', assessment:'Tutorial attendance'}, econ1111:{topic:'Introduction to Statistics Part 2', reading:'Textbook + videos + problem sets', assessment:'Tutorial questions'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+  { week:12, date:'18 May', fina:{topic:'Corporate Governance + Revision', reading:'Ch.29', assessment:'Tutorial #10'}, econ2271:{topic:'Arguing from Data + Revision', reading:'—', assessment:'⚠ Test 3 in Tutorial · Assignment #2 due 7 Jun'}, econ1111:{topic:'Test Week', reading:'Textbook + videos + problem sets', assessment:'⚠ Test 3 — no tutorials'}, econ2233:{topic:'TBA', reading:'TBA', assessment:''} },
+];
+
+const CHECKLISTS = [
+  { label:'Week 1 — Lectures Only', items:[
+    {text:'Pre-read FINA2222 Ch.12 (Cost of Capital)', unit:'fina'},
+    {text:"Pre-read ECON2271 — Mastering 'Metrics Ch.1", unit:'econ2271'},
+    {text:'Pre-read ECON1111 — Fundamentals (skim textbook + videos)', unit:'econ1111'},
+    {text:'Attend ECON2271 lecture in person (Wed 10am)', unit:'econ2271'},
+    {text:'Watch FINA2222 lecture recording (Wed evening)', unit:'fina'},
+    {text:'Attend ECON2233 lecture (Tue 4pm)', unit:'econ2233'},
+    {text:'Attend ECON1111 lecture (Thu 9am)', unit:'econ1111'},
+    {text:'Attend ECON2271 lab (Thu 1pm)', unit:'econ2271'},
+    {text:'Post-process FINA2222 notes within 2hrs of watching recording', unit:'fina'},
+    {text:'Post-process ECON2271 notes within 2hrs of lecture', unit:'econ2271'},
+    {text:'Post-process ECON1111 notes within 2hrs of lecture', unit:'econ1111'},
+    {text:'Post-process ECON2233 notes within 2hrs of lecture', unit:'econ2233'},
+    {text:'ECON2271 practice problems (30 min)', unit:'econ2271'},
+    {text:'Friday concept map — all units', unit:'fina'},
+    {text:'Weekend: preview Week 2 tutorial questions', unit:'fina'},
+  ]},
+  { label:'Week 2 — Tutorials Begin (Wk 2)', items:[
+    {text:'Pre-reads done before each lecture (Mon for Tue/Wed)', unit:'fina'},
+    {text:'FINA2222 Tutorial — Tue 2pm', unit:'fina'},
+    {text:'ECON2233 Lecture — Tue 4pm', unit:'econ2233'},
+    {text:'ECON2233 Tutorial — Wed 8am', unit:'econ2233'},
+    {text:'ECON2271 Lecture in person — Wed 10am', unit:'econ2271'},
+    {text:'Watch FINA2222 recording — Wed evening (non-negotiable)', unit:'fina'},
+    {text:'ECON1111 Tutorial — Wed 2pm', unit:'econ1111'},
+    {text:'ECON1111 Lecture — Thu 9am', unit:'econ1111'},
+    {text:'ECON2271 Lab — Thu 1pm', unit:'econ2271'},
+    {text:'Post-process all notes within 2hrs of each lecture', unit:'fina'},
+    {text:'Complete FINA2222 Online Quiz #2', unit:'fina'},
+    {text:'Tutorial questions — all units (Fri or weekend)', unit:'econ2233'},
+    {text:'ECON2271 practice problems (30 min/day x 3)', unit:'econ2271'},
+    {text:'Friday concept map — all 4 units', unit:'fina'},
+    {text:'Saturday buffer: pre-reads for Week 3', unit:'econ2271'},
+  ]},
+  { label:'Week 3', items:[
+    {text:'Pre-reads done before each lecture', unit:'fina'},
+    {text:'All lectures attended (ECON2271 in person)', unit:'econ2271'},
+    {text:'FINA2222 recording watched Wednesday evening', unit:'fina'},
+    {text:'Post-process all notes within 2hrs', unit:'fina'},
+    {text:'FINA2222 Quiz #3 + Tutorial #2 completed', unit:'fina'},
+    {text:'ECON2271 tutorial attendance recorded (from this week)', unit:'econ2271'},
+    {text:'Tutorial questions — all units attempted before tutorials', unit:'econ2233'},
+    {text:'ECON2271 daily problem practice', unit:'econ2271'},
+    {text:'Fortnightly review — revisit Week 1 material', unit:'econ1111'},
+    {text:'Friday concept map — all 4 units', unit:'fina'},
+  ]},
+  { label:'Week 4', items:[
+    {text:'Pre-reads done before each lecture', unit:'fina'},
+    {text:'All lectures attended', unit:'fina'},
+    {text:'FINA2222 recording watched Wednesday evening', unit:'fina'},
+    {text:'Post-process all notes within 2hrs', unit:'fina'},
+    {text:'FINA2222 Quiz #4 + Tutorial #3 completed', unit:'fina'},
+    {text:'FINA2222 — update running concept chain diagram', unit:'fina'},
+    {text:'Tutorial questions — all units before tutorials', unit:'econ2233'},
+    {text:'ECON2271 — revisit hard problems from Weeks 1–2', unit:'econ2271'},
+    {text:'Fortnightly review — revisit Week 2 material', unit:'econ1111'},
+    {text:'Friday concept map — all 4 units', unit:'fina'},
+    {text:'Saturday buffer — Week 5 pre-reads or catch-up', unit:'econ2271'},
+  ]},
+  { label:'Week 5 — ⚠ Tests: ECON2271 Test 1 + ECON1111 Test 1', items:[
+    {text:'Pre-reads done before each lecture', unit:'fina'},
+    {text:'All lectures attended', unit:'fina'},
+    {text:'FINA2222 recording watched Wednesday evening', unit:'fina'},
+    {text:'Post-process all notes within 2hrs', unit:'fina'},
+    {text:'ECON2271 Test 1 — prepared and sat in tutorial', unit:'econ2271'},
+    {text:'ECON1111 Test 1 — prepared and sat in workshop', unit:'econ1111'},
+    {text:'FINA2222 Quiz #5 + Tutorial #4 completed', unit:'fina'},
+    {text:'ECON2271 daily problem practice', unit:'econ2271'},
+    {text:'Friday concept map — all 4 units', unit:'fina'},
+  ]},
+];
+
+const UNIT_COLORS = { fina:'var(--fina)', econ2271:'var(--econ2271)', econ1111:'var(--econ1111)', econ2233:'var(--econ2233)' };
+const TITLES = { dashboard:'Dashboard', grades:'Grade Tracker', schedule:'Weekly Schedule', checklist:'Weekly Checklist', rhythm:'Weekly Rhythm', notetaking:'Note-Taking System', revision:'Revision Strategy' };
+
+// ── STATE ──
+let scores = JSON.parse(localStorage.getItem('uwa_scores') || '{}');
+let checks = JSON.parse(localStorage.getItem('uwa_checks') || '{}');
+let currentWeek = 1;
+
+// ── NAV ──
+function nav(id) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="nav('${id}')"]`).classList.add('active');
+  document.getElementById(`panel-${id}`).classList.add('active');
+  document.getElementById('topbar-title').textContent = TITLES[id];
+}
+
+// ── GPA CALC ──
+function scoreToGPA(pct) {
+  if (pct >= 80) return 7;
+  if (pct >= 70) return 6;
+  if (pct >= 60) return 5;
+  if (pct >= 50) return 4;
+  if (pct >= 45) return 3;
+  if (pct >= 0) return 1;
+  return 0;
+}
+
+function calcGPA() {
+  const allAssess = [...ASSESSMENTS.fina, ...ASSESSMENTS.econ2271, ...ASSESSMENTS.econ1111];
+  const unitWeights = { fina: 100, econ2271: 100, econ1111: 100, econ2233: 100 };
+  
+  // Per unit weighted average
+  const unitScores = {};
+  ['fina','econ2271','econ1111'].forEach(unit => {
+    let totalWeight = 0, weightedSum = 0;
+    ASSESSMENTS[unit].forEach(a => {
+      const s = scores[a.id];
+      if (s !== undefined && s !== '') {
+        weightedSum += parseFloat(s) * a.weight;
+        totalWeight += a.weight;
+      }
+    });
+    if (totalWeight > 0) {
+      unitScores[unit] = { avg: weightedSum / totalWeight, weightGraded: totalWeight };
+    }
+  });
+
+  const unitKeys = Object.keys(unitScores);
+  if (unitKeys.length === 0) return null;
+
+  const gpaSum = unitKeys.reduce((s, u) => s + scoreToGPA(unitScores[u].avg), 0);
+  return { gpa: gpaSum / unitKeys.length, unitScores, unitsGraded: unitKeys.length };
+}
+
+function updateGPA() {
+  const result = calcGPA();
+  const gpaEl = document.getElementById('gpa-display');
+  const dashGpa = document.getElementById('dash-gpa');
+  const gpaCurrentEl = document.getElementById('gpa-current');
+  const gpaGapEl = document.getElementById('gpa-gap');
+  const gpaPctGraded = document.getElementById('gpa-pct-graded');
+  const arc = document.getElementById('gpa-arc-circle');
+
+  if (!result) {
+    gpaEl.textContent = '—';
+    dashGpa.textContent = '—';
+    gpaCurrentEl.textContent = 'No grades yet';
+    gpaGapEl.textContent = '—';
+    gpaPctGraded.textContent = '0%';
+    arc.style.strokeDashoffset = '314';
+    return;
+  }
+
+  const gpa = Math.round(result.gpa * 10) / 10;
+  gpaEl.textContent = gpa.toFixed(1);
+  dashGpa.textContent = gpa.toFixed(1);
+  gpaCurrentEl.textContent = gpa.toFixed(1);
+
+  const gap = 6.0 - gpa;
+  gpaGapEl.textContent = gap <= 0 ? '✓ On target' : `${gap.toFixed(1)} below target`;
+  gpaGapEl.className = 'gpa-stat-val ' + (gap <= 0 ? 'good' : 'warn');
+
+  const pct = (result.unitsGraded / 3) * 100;
+  gpaPctGraded.textContent = Math.round(pct) + '%';
+
+  const arcVal = 314 - (314 * (gpa / 7));
+  arc.style.strokeDashoffset = arcVal;
+  arc.style.stroke = gpa >= 6 ? 'var(--green)' : gpa >= 5 ? 'var(--warn)' : 'var(--red)';
+
+  updateNeeded(result.unitScores);
+}
+
+function updateNeeded(unitScores) {
+  const grid = document.getElementById('needed-grid');
+  if (!grid) return;
+  const TARGET = 75;
+  const items = [];
+
+  ['fina','econ2271','econ1111'].forEach(unit => {
+    const assess = ASSESSMENTS[unit];
+    const gradedWeight = assess.reduce((s, a) => scores[a.id] !== undefined && scores[a.id] !== '' ? s + a.weight : s, 0);
+    const earnedPct = assess.reduce((s, a) => scores[a.id] !== undefined && scores[a.id] !== '' ? s + parseFloat(scores[a.id]) * a.weight / 100 : s, 0);
+    const remainingWeight = 100 - gradedWeight;
+
+    if (remainingWeight <= 0) return;
+
+    const neededEarned = TARGET/100 - earnedPct;
+    const neededScore = (neededEarned / remainingWeight) * 100;
+    const unitName = unit === 'fina' ? 'FINA2222' : unit === 'econ2271' ? 'ECON2271' : 'ECON1111';
+    const nextAssess = assess.find(a => scores[a.id] === undefined || scores[a.id] === '');
+
+    const cls = neededScore <= 75 ? 'achievable' : neededScore <= 90 ? 'stretch' : 'tough';
+    items.push(`<div class="needed-card">
+      <div class="needed-unit" style="color:${UNIT_COLORS[unit].replace('var(',''').replace(')','')}">${unitName}</div>
+      <div class="needed-assessment">${nextAssess ? nextAssess.name : 'All graded'}</div>
+      <div class="needed-score ${cls}">${neededScore > 100 ? '>100%' : neededScore < 0 ? 'On target ✓' : Math.round(neededScore) + '%'}</div>
+      <div style="font-size:0.68rem;color:var(--muted);margin-top:0.2rem">avg needed remaining</div>
+    </div>`);
+  });
+
+  grid.innerHTML = items.join('');
+}
+
+// ── ASSESSMENTS ──
+function renderAssessments() {
+  const today = new Date();
+
+  ['fina','econ2271','econ1111'].forEach(unit => {
+    const container = document.getElementById(`assess-${unit}`);
+    if (!container) return;
+    container.innerHTML = ASSESSMENTS[unit].map(a => {
+      const due = new Date(a.due);
+      const daysUntil = Math.ceil((due - today) / (1000*60*60*24));
+      let status = 'upcoming', statusLabel = 'Upcoming';
+      if (scores[a.id] !== undefined && scores[a.id] !== '') { status = 'done'; statusLabel = 'Done'; }
+      else if (daysUntil < 0) { status = 'overdue'; statusLabel = 'Overdue'; }
+      else if (daysUntil <= 14) { status = 'due-soon'; statusLabel = `${daysUntil}d`; }
+
+      const scoreVal = scores[a.id] !== undefined ? scores[a.id] : '';
+      return `<div class="assessment-item">
+        <div class="assessment-dot" style="background:${UNIT_COLORS[unit]}"></div>
+        <div class="assessment-info">
+          <div class="assessment-name">${a.name}</div>
+          <div class="assessment-meta">${a.type} · Due ${a.due} · Wk ${a.week}</div>
+        </div>
+        <div class="assessment-weight">${a.weight}%</div>
+        <div class="assessment-score-wrap">
+          <input class="score-input" type="number" min="0" max="100" placeholder="Score" value="${scoreVal}" onchange="saveScore('${a.id}', this.value)" oninput="saveScore('${a.id}', this.value)">
+          <span class="score-pct">%</span>
+        </div>
+        <span class="status-badge ${status}">${statusLabel}</span>
+      </div>`;
+    }).join('');
+  });
+
+  updateUpcoming();
+  updateDashDone();
+}
+
+function saveScore(id, val) {
+  scores[id] = val;
+  localStorage.setItem('uwa_scores', JSON.stringify(scores));
+  updateGPA();
+  renderAssessments();
+}
+
+function updateUpcoming() {
+  const list = document.getElementById('upcoming-list');
+  if (!list) return;
+  const today = new Date();
+  const all = [
+    ...ASSESSMENTS.fina.map(a => ({...a, unit:'fina'})),
+    ...ASSESSMENTS.econ2271.map(a => ({...a, unit:'econ2271'})),
+    ...ASSESSMENTS.econ1111.map(a => ({...a, unit:'econ1111'})),
+  ].filter(a => !(scores[a.id] !== undefined && scores[a.id] !== ''))
+   .sort((a,b) => new Date(a.due) - new Date(b.due))
+   .slice(0, 5);
+
+  list.innerHTML = all.map(a => {
+    const due = new Date(a.due);
+    const daysUntil = Math.ceil((due - today) / (1000*60*60*24));
+    const urgency = daysUntil < 0 ? 'color:var(--red)' : daysUntil <= 7 ? 'color:var(--warn)' : 'color:var(--muted2)';
+    return `<div style="display:flex;align-items:center;gap:0.7rem;padding:0.5rem 0.7rem;background:var(--card2);border-radius:6px;border:1px solid var(--border)">
+      <div style="width:7px;height:7px;border-radius:50%;background:${UNIT_COLORS[a.unit]};flex-shrink:0"></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:0.78rem;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.name}</div>
+        <div style="font-size:0.65rem;color:var(--muted);font-family:'JetBrains Mono',monospace">${a.unit.toUpperCase()} · ${a.weight}%</div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;${urgency};white-space:nowrap">${daysUntil < 0 ? 'Overdue' : daysUntil === 0 ? 'Today' : daysUntil + 'd'}</div>
+    </div>`;
+  }).join('');
+}
+
+function updateDashDone() {
+  const allAssess = [...ASSESSMENTS.fina, ...ASSESSMENTS.econ2271, ...ASSESSMENTS.econ1111];
+  const done = allAssess.filter(a => scores[a.id] !== undefined && scores[a.id] !== '').length;
+  const doneEl = document.getElementById('dash-done');
+  if (doneEl) { doneEl.textContent = done; }
+}
+
+// ── SCHEDULE ──
+function renderWeekSelector() {
+  const sel = document.getElementById('week-selector');
+  if (!sel) return;
+  sel.innerHTML = '';
+  for (let w = 1; w <= 12; w++) {
+    const btn = document.createElement('button');
+    btn.className = 'week-btn' + (w === currentWeek ? ' active' : '');
+    btn.textContent = `W${w}`;
+    btn.onclick = () => { currentWeek = w; renderWeekSelector(); renderWeekReadings(); };
+    sel.appendChild(btn);
+  }
+}
+
+function renderWeekReadings() {
+  const wk = WEEK_SCHEDULE[currentWeek - 1];
+  const container = document.getElementById('readings-display');
+  const assessContainer = document.getElementById('week-assessments');
+  if (!container || !wk) return;
+
+  const units = [
+    { key:'fina', label:'FINA2222', data: wk.fina },
+    { key:'econ2271', label:'ECON2271', data: wk.econ2271 },
+    { key:'econ1111', label:'ECON1111', data: wk.econ1111 },
+    { key:'econ2233', label:'ECON2233', data: wk.econ2233 },
+  ];
+
+  container.innerHTML = units.map(u => `
+    <div class="reading-card ${u.key}">
+      <div class="reading-unit">${u.label}</div>
+      <div class="reading-topic">${u.data.topic}</div>
+      <div class="reading-chapter">${u.data.reading}</div>
+      ${u.data.assessment ? `<div class="reading-assessment" style="background:${u.key === 'fina' ? 'var(--fina-dim)' : u.key === 'econ2271' ? 'var(--econ2271-dim)' : 'var(--econ1111-dim)'};color:${UNIT_COLORS[u.key]};border:1px solid ${u.key === 'fina' ? 'var(--fina-border)' : u.key === 'econ2271' ? 'var(--econ2271-border)' : 'var(--econ1111-border)'}">${u.data.assessment}</div>` : ''}
+    </div>
+  `).join('');
+
+  // Week assessments
+  const weekAssess = [
+    ...ASSESSMENTS.fina.filter(a => a.week === currentWeek).map(a => ({...a, unit:'fina'})),
+    ...ASSESSMENTS.econ2271.filter(a => a.week === currentWeek).map(a => ({...a, unit:'econ2271'})),
+    ...ASSESSMENTS.econ1111.filter(a => a.week === currentWeek).map(a => ({...a, unit:'econ1111'})),
+  ];
+
+  assessContainer.innerHTML = weekAssess.length ? weekAssess.map(a => `
+    <div class="week-assessment-row">
+      <div class="wa-dot" style="background:${UNIT_COLORS[a.unit]}"></div>
+      <div class="wa-unit" style="color:${UNIT_COLORS[a.unit]}">${a.unit.toUpperCase()}</div>
+      <div class="wa-name">${a.name}</div>
+      <div class="wa-type">${a.weight}% · ${a.type}</div>
+    </div>
+  `).join('') : `<div style="color:var(--muted);font-size:0.78rem;padding:1rem;text-align:center">No assessments due this week</div>`;
+}
+
+// ── CHECKLIST ──
+function renderChecklist() {
+  const container = document.getElementById('checklist-container');
+  if (!container) return;
+  container.innerHTML = CHECKLISTS.map((week, wi) => {
+    const total = week.items.length;
+    const done = week.items.filter((_, ii) => checks[`${wi}-${ii}`]).length;
+    return `<div class="checklist-block">
+      <div class="checklist-header" onclick="toggleChecklist(${wi})">
+        <div class="checklist-title">${week.label}</div>
+        <div class="checklist-prog">
+          <span class="prog-text" id="prog-text-${wi}">${done}/${total}</span>
+          <div class="prog-bar"><div class="prog-fill" id="prog-fill-${wi}" style="width:${(done/total)*100}%"></div></div>
+        </div>
+      </div>
+      <div class="checklist-items" id="cl-items-${wi}">
+        ${week.items.map((item, ii) => `
+          <div class="check-row${checks[`${wi}-${ii}`] ? ' checked' : ''}" onclick="toggleCheck(${wi}, ${ii}, this)" data-wi="${wi}" data-ii="${ii}">
+            <div class="check-box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="var(--bg)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="check-udot" style="background:${UNIT_COLORS[item.unit]}"></div>
+            <span class="check-label">${item.text}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCheck(wi, ii, el) {
+  const key = `${wi}-${ii}`;
+  checks[key] = !checks[key];
+  localStorage.setItem('uwa_checks', JSON.stringify(checks));
+  el.classList.toggle('checked', checks[key]);
+  updateChecklistProgress(wi);
+}
+
+function updateChecklistProgress(wi) {
+  const week = CHECKLISTS[wi];
+  const done = week.items.filter((_, ii) => checks[`${wi}-${ii}`]).length;
+  const total = week.items.length;
+  document.getElementById(`prog-text-${wi}`).textContent = `${done}/${total}`;
+  document.getElementById(`prog-fill-${wi}`).style.width = `${(done/total)*100}%`;
+}
+
+function toggleChecklist(wi) {
+  const items = document.getElementById(`cl-items-${wi}`);
+  items.style.display = items.style.display === 'none' ? '' : 'none';
+}
+
+// ── INIT ──
+renderAssessments();
+updateGPA();
+renderWeekSelector();
+renderWeekReadings();
+renderChecklist();
+</script>
+</body>
+</html>
